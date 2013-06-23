@@ -13,84 +13,84 @@ end
 function countSorroundingMines(x, y)
 	local count = 0
 	if(isMine(x-1,y-1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x-1,y)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x-1,y+1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x,y-1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x,y+1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x+1,y)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x+1,y-1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	if(isMine(x+1,y+1)) then
-	  count = count + 1 
+		count = count + 1 
 	end
 	return count
 end
 
 function onGameComplete(event)
 	if event.action == "clicked" then
-	  if event.index == 1 then
-		restart(minesPercentage)
-	  else
-		os.exit()
-	  end	
-    end
+		if event.index == 1 then
+			restart(minesPercentage)
+		else
+			os.exit()
+		end	
+	end
 end
 
 function removeRectangle(rectangle)
-  rectanglesHash[rectangle.i..rectangle.j] = nil
-  for i=1, #rectangles, 1 do
-	  if rectangles[i] == rectangle then
-		  rectangles[i] = nil
-      end
-  end  
-  rectangle:removeSelf() 
-  rectangle = nil
+	rectanglesHash[rectangle.i..rectangle.j] = nil
+	for i=1, #rectangles, 1 do
+		if rectangles[i] == rectangle then
+			rectangles[i] = nil
+		end
+	end  
+	rectangle:removeSelf() 
+	rectangle = nil
 end
 
 function showAllBombs()
 	for i=1, #rectangles, 1 do
 		if rectangles[i]~= nil and rectangles[i].x ~= nil then
-		  if mines[rectangles[i].i..rectangles[i].j] ~= nil then
-		    local image = display.newImageRect( "bomb.jpg",50,50)
-		    image:setReferencePoint( display.CenterReferencePoint )
-		    image.x = rectangles[i].x
-		    image.y = rectangles[i].y
-		    removeRectangle(rectangles[i])
-	      end
-	    end
+			if mines[rectangles[i].i..rectangles[i].j] ~= nil then
+				local image = display.newImageRect( "bomb.jpg",50,50)
+				image:setReferencePoint( display.CenterReferencePoint )
+				image.x = rectangles[i].x
+				image.y = rectangles[i].y
+				removeRectangle(rectangles[i])
+			end
+		end
 	end
 end
 
 function showSurroundingMines(rectangle)
-   if(rectangle == nil) then
+	if(rectangle == nil) then
 		return
-   end
-   local count = countSorroundingMines(rectangle.i, rectangle.j)
-   local text = display.newText(count, rectangle.x, rectangle.y, native.systemFont, 32)  
-   removeRectangle(rectangle) 
-   if count == 0 then
-	   showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j-1)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j+1)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j-1)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j+1)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j-1)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j)])
-	   showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j+1)])
-   end 
+	end
+	local count = countSorroundingMines(rectangle.i, rectangle.j)
+	local text = display.newText(count, rectangle.x, rectangle.y, native.systemFont, 32)  
+	removeRectangle(rectangle) 
+	if count == 0 then
+		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j)])
+		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j+1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j+1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j+1)])
+	end 
 end
 
 function initializeMineMatrix(sizeX,sizeY)
@@ -111,7 +111,7 @@ function discover(event)
 		showAllBombs()
 		native.showAlert( "KABOOOOOOM!!", "You have lost!", { "Restart", "Quit" }, onGameComplete )
 	else
-	   showSurroundingMines(event.target)	
+		showSurroundingMines(event.target)	
 	end
 end
 
@@ -122,35 +122,35 @@ function drawBoard()
 	for i = 0, display.contentWidth, 1 do
 		y = 10
 		if(x+50 <= display.contentWidth - 10) then
-	    	for j = 0, display.contentHeight, 1 do
-		    	if(y+50 <= display.contentHeight) then
-		          local rect = display.newRect(x, y, 50, 50)
-				  rect:setFillColor(120, 120, 120)
-				  rect:addEventListener( "tap", discover);
-				  rect.i = i
-				  rect.j = j
-				  table.insert(rectangles, rect)
-				  rectanglesHash[i..j] = rect
-				  y = y + 60	
-				  jGlobal = j
+			for j = 0, display.contentHeight, 1 do
+				if(y+50 <= display.contentHeight) then
+					local rect = display.newRect(x, y, 50, 50)
+					rect:setFillColor(120, 120, 120)
+					rect:addEventListener( "tap", discover);
+					rect.i = i
+					rect.j = j
+					table.insert(rectangles, rect)
+					rectanglesHash[i..j] = rect
+					y = y + 60	
+					jGlobal = j
 				end
 	            
-		    end		 	
-		    x = x+60  
+			end		 	
+			x = x+60  
 			iGlobal = i
-		 end	      
-    end
+		end	      
+	end
 	return (iGlobal+1), (jGlobal+1)
 end
 
 function restart(minePercentage)
 	display.newRect(
-	  0, 0, display.contentWidth, display.contentHeight
+	0, 0, display.contentWidth, display.contentHeight
 	):setFillColor(0, 0, 0);
     
-    minesPercentage = tonumber(minePercentage)
+	minesPercentage = tonumber(minePercentage)
 
-    mines = {}
+	mines = {}
 	rectangles = {}
 	rectanglesHash = {}
 	discovered = 0
