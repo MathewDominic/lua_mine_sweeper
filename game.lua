@@ -74,7 +74,7 @@ end
 function showAllBombs()
 	for i=1, #rectangles, 1 do
 		if rectangles[i]~= nil and rectangles[i].x ~= nil then
-			if mines[rectangles[i].i.."-"..rectangles[i].j] ~= nil then
+			if isMine(rectangles[i].i, rectangles[i].j) then
 				local image = display.newImageRect( "bomb.jpg",50,50)
 				image:setReferencePoint( display.CenterReferencePoint )
 				image.x = rectangles[i].x
@@ -104,14 +104,15 @@ function showSurroundingMines(rectangle)
 	end 
 end
 
+
 function initializeMineMatrix(sizeX,sizeY)
 	numberOfMines = sizeX * sizeY * minesPercentage / 100
 	for i=1, numberOfMines, 1 do
-		randomX = math.random(sizeX)
-		randomY = math.random(sizeY) 
-		while(mines[randomX.."-"..randomY] ~= null) do
-			randomX = math.random(sizeX)
-			randomY = math.random(sizeY) 
+		randomX = math.random(0,sizeX)
+		randomY = math.random(0,sizeY) 
+		while(isMine(randomX,randomY)) do
+			randomX = math.random(0,sizeX)
+			randomY = math.random(0,sizeY) 
 		end
 		mines[randomX.."-"..randomY] = {x=randomX, y=randomY}
 	end
