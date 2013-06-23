@@ -8,7 +8,9 @@ module(..., package.seeall)
 
 
 function isMine(x, y)
-	return mines[x..y] ~= null
+	print("For places "..x.."-"..y)
+	print(mines[x.."-"..y])
+	return mines[x.."-"..y] ~= null
 end
 
 function countSorroundingMines(x, y)
@@ -45,6 +47,9 @@ function onGameComplete(event)
 		if event.index == 1 then
 			bigRect:removeSelf()
 			bigRect = nil
+			for i=1, #rectangles, 1 do
+				removeRectangle(rectangles[i])
+			end 
 			restart(minesPercentage)
 		else
 			os.exit()
@@ -53,7 +58,10 @@ function onGameComplete(event)
 end
 
 function removeRectangle(rectangle)
-	rectanglesHash[rectangle.i..rectangle.j] = nil
+	if rectangle == nil then
+		return
+	end
+	rectanglesHash[rectangle.i.."-"..rectangle.j] = nil
 	for i=1, #rectangles, 1 do
 		if rectangles[i] == rectangle then
 			rectangles[i] = nil
@@ -66,7 +74,7 @@ end
 function showAllBombs()
 	for i=1, #rectangles, 1 do
 		if rectangles[i]~= nil and rectangles[i].x ~= nil then
-			if mines[rectangles[i].i..rectangles[i].j] ~= nil then
+			if mines[rectangles[i].i.."-"..rectangles[i].j] ~= nil then
 				local image = display.newImageRect( "bomb.jpg",50,50)
 				image:setReferencePoint( display.CenterReferencePoint )
 				image.x = rectangles[i].x
@@ -85,27 +93,27 @@ function showSurroundingMines(rectangle)
 	local text = display.newText(count, rectangle.x, rectangle.y, native.systemFont, 32)  
 	removeRectangle(rectangle) 
 	if count == 0 then
-		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j-1)])
-		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j)])
-		showSurroundingMines(rectanglesHash[(rectangle.i-1)..(rectangle.j+1)])
-		showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j-1)])
-		showSurroundingMines(rectanglesHash[(rectangle.i)..(rectangle.j+1)])
-		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j-1)])
-		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j)])
-		showSurroundingMines(rectanglesHash[(rectangle.i+1)..(rectangle.j+1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i-1).."-"..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i-1).."-"..(rectangle.j)])
+		showSurroundingMines(rectanglesHash[(rectangle.i-1).."-"..(rectangle.j+1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i).."-"..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i).."-"..(rectangle.j+1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1).."-"..(rectangle.j-1)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1).."-"..(rectangle.j)])
+		showSurroundingMines(rectanglesHash[(rectangle.i+1).."-"..(rectangle.j+1)])
 	end 
 end
 
 function initializeMineMatrix(sizeX,sizeY)
 	numberOfMines = sizeX * sizeY * minesPercentage / 100
-	for i=0, numberOfMines, 1 do
+	for i=1, numberOfMines, 1 do
 		randomX = math.random(sizeX)
 		randomY = math.random(sizeY) 
-		while(mines[randomX..randomY] ~= null) do
+		while(mines[randomX.."-"..randomY] ~= null) do
 			randomX = math.random(sizeX)
 			randomY = math.random(sizeY) 
 		end
-		mines[randomX..randomY] = {x=randomX, y=randomY}
+		mines[randomX.."-"..randomY] = {x=randomX, y=randomY}
 	end
 end
 
@@ -133,7 +141,7 @@ function drawBoard()
 					rect.i = i
 					rect.j = j
 					table.insert(rectangles, rect)
-					rectanglesHash[i..j] = rect
+					rectanglesHash[i.."-"..j] = rect
 					y = y + 60	
 					jGlobal = j
 				end
@@ -143,7 +151,7 @@ function drawBoard()
 			iGlobal = i
 		end	      
 	end
-	return (iGlobal+1), (jGlobal+1)
+	return (iGlobal), (jGlobal)
 end
 
 function restart(minePercentage)
