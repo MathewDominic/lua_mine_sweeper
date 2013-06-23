@@ -2,7 +2,9 @@ local widget = require( "widget" )
 local game = require("game")
 
 local text = display.newText("Mine Percentage", 0, 30, native.systemFont, 24)  
-local defaultField = native.newTextField( 200, 30, 180, 30 )
+local defaultField = native.newTextField( 200, 30, 180, 100 )
+defaultField.font = native.newFont( native.systemFontBold, 24 )
+defaultField.inputType = "number"
 
 local myButton = widget.newButton
 {

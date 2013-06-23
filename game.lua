@@ -1,9 +1,10 @@
 module(..., package.seeall)
-local minesPercentage = 0
-local mines = {}
-local rectangles = {}
-local rectanglesHash = {}
-local discovered = 0
+ local minesPercentage = 0
+ local mines = {}
+ local rectangles = {}
+ local rectanglesHash = {}
+ local discovered = 0
+ local bigRect = nil
 
 
 function isMine(x, y)
@@ -42,6 +43,8 @@ end
 function onGameComplete(event)
 	if event.action == "clicked" then
 		if event.index == 1 then
+			bigRect:removeSelf()
+			bigRect = nil
 			restart(minesPercentage)
 		else
 			os.exit()
@@ -144,9 +147,10 @@ function drawBoard()
 end
 
 function restart(minePercentage)
-	display.newRect(
-	0, 0, display.contentWidth, display.contentHeight
-	):setFillColor(0, 0, 0);
+	bigRect = display.newRect(
+	    0, 0, display.contentWidth, display.contentHeight+10
+	  )
+    bigRect:setFillColor(0, 0, 0);
     
 	minesPercentage = tonumber(minePercentage)
 
